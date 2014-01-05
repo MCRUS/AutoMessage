@@ -20,13 +20,13 @@ message-lists:
     random: false
     interval: 45
     expiry: -1
-    prefix: '[&bPrefix&r] '
-    suffix: ' [&4Suffix&r]'
+    prefix: '[&bПрефикс&r] '
+    suffix: ' [&4Суффикс&r]'
     messages:
-    - '&1First&r message %nin the default list!': []
-    - '&2Second&r message %nin the default list!': []
-    - '&3Third&r message %nin the default list!': []
-    - 'These messages will be displayed to users with %nautomessage.receive.default!': []
+    - '&1Первое&r сообщение %nв списке по уполчанию!': []
+    - '&2Второе&r сообщение %nв списке по уполчанию!': []
+    - '&3Третье&r сообщение %nв списке по уполчанию!': []
+    - 'Данное сообщение показано только пользоваляем которые имеют доступ %nautomessage.receive.default!': []
   formatted:
     enabled: true
     random: false
@@ -36,6 +36,6 @@ message-lists:
     suffix: ''
     messages:
     - '%6s %9s %10s':
-      - 'Custom'
-      - 'formatted'
-      - '&2message!'
+      - 'Красиво'
+      - 'оформленное'
+      - '&2сообщение!'

@@ -15,59 +15,60 @@ import com.TeamNovus.AutoMessage.AutoMessage;
 import com.TeamNovus.AutoMessage.Permission;
 
 public class BaseCommandExecutor implements CommandExecutor, TabCompleter {
-	
+
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 0) {
 			sender.sendMessage(CommandManager.getExtra() + "__________________.[ " + CommandManager.getHighlight() + AutoMessage.getPlugin().getName() + CommandManager.getExtra() + " ].__________________");
-			sender.sendMessage(CommandManager.getDark() + "Description: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getDescription());
-			sender.sendMessage(CommandManager.getDark() + "Author: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getAuthors().get(0));
-			sender.sendMessage(CommandManager.getDark() + "Version: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getVersion());
-			sender.sendMessage(CommandManager.getDark() + "Website: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getWebsite());
+			sender.sendMessage(CommandManager.getDark() + "Описание: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getDescription());
+			sender.sendMessage(CommandManager.getDark() + "Автор: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getAuthors().get(0));
+			sender.sendMessage(CommandManager.getDark() + "Перевод: " + CommandManager.getLight() + "Alex_Bond_UA");
+			sender.sendMessage(CommandManager.getDark() + "Версия: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getVersion());
+			sender.sendMessage(CommandManager.getDark() + "Вебсайт: " + CommandManager.getLight() + AutoMessage.getPlugin().getDescription().getWebsite());
 			sender.sendMessage(CommandManager.getExtra() + "---------------------------------------------------");
 			return true;
 		}
-		
+
 		if(CommandManager.getCommand(args[0]) == null) {
-			sender.sendMessage(CommandManager.getError() + "The specified command was not found!");
+			sender.sendMessage(CommandManager.getError() + "Указанная команда не найдена!");
 			return true;
 		}
-		
+
 		BaseCommand command = CommandManager.getCommand(args[0]);
 		Object[] commandArgs = ArrayUtils.remove(args, 0);
-		
+
 		if(sender instanceof Player && !(command.player())) {
-			sender.sendMessage(CommandManager.getError() + "This command cannot be ran as a player!");
+			sender.sendMessage(CommandManager.getError() + "Данная команда не может быть исполнена от имени игрока!");
 			return true;
 		}
-		
+
 		if(sender instanceof ConsoleCommandSender && !(command.console())) {
-			sender.sendMessage(CommandManager.getError() + "This command cannot be ran from the console!");
+			sender.sendMessage(CommandManager.getError() + "Данная команда не может быть исполнена из консоли!");
 			return true;
 		}
-		
+
 		if(command.permission() != null && !(command.permission().equals(Permission.NONE)) && !(Permission.has(command.permission(), sender))) {
-			sender.sendMessage(CommandManager.getError() + "You do not have permission for this command!");
+			sender.sendMessage(CommandManager.getError() + "У Вас недостаточно прав!");
 			return true;
 		}
-		
+
 		if((commandArgs.length < command.min()) || (commandArgs.length > command.max() && command.max() != -1)) {
-			sender.sendMessage(CommandManager.getError() + "Usage: /" + commandLabel + " " + command.aliases()[0] + " " + command.usage());
+			sender.sendMessage(CommandManager.getError() + "Использование: /" + commandLabel + " " + command.aliases()[0] + " " + command.usage());
 			return true;
 		}
-		
-		CommandManager.execute(command, sender, cmd, commandLabel, commandArgs);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+		CommandManager.execute(command, sender, cmd, commandLabel, commandArgs);
 		return true;
 	}
-	
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {	
+
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		ArrayList<String> list = new ArrayList<String>();
-		
+
 		for(BaseCommand command : CommandManager.getCommands()) {
 			for(String alias : command.aliases()) {
 				list.add(alias);
 			}
 		}
-		
-		return list;		
+
+		return list;
 	}
 }

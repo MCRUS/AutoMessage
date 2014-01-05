@@ -14,45 +14,22 @@ import com.TeamNovus.AutoMessage.Models.Message;
 import com.TeamNovus.AutoMessage.Models.MessageList;
 import com.TeamNovus.AutoMessage.Models.MessageLists;
 import com.TeamNovus.AutoMessage.Util.StringUtil;
-import com.TeamNovus.AutoMessage.Util.Updater;
-import com.TeamNovus.AutoMessage.Util.Updater.UpdateResult;
-import com.TeamNovus.AutoMessage.Util.Updater.UpdateType;
 
 public class PluginCommands {
 
 	@BaseCommand(aliases = "test", permission = Permission.NONE, desc = "")
 	public void testCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		sender.sendMessage(String.format("This is a %5s test!", "test"));
+		sender.sendMessage(String.format("Это %5s тест!", "test"));
 	}
 	
-	@BaseCommand(aliases = "reload", desc = "Reload the configuration from the disk.", usage = "", permission = Permission.COMMAND_RELOAD)
+	@BaseCommand(aliases = "reload", desc = "Перезагружает конфигурацию с диска.", usage = "", permission = Permission.COMMAND_RELOAD)
 	public void onReloadCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		AutoMessage.getPlugin().loadConfig();
 
-		sender.sendMessage(ChatColor.GREEN + "Configuration reloaded from disk!");
+		sender.sendMessage(ChatColor.GREEN + "Конфигурация была перезагружена!");
 	}
 	
-	@BaseCommand(aliases = "update", desc = "Update to the latest version.", usage = "", permission = Permission.COMMAND_UPDATE)
-	public void onUpdateCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		Updater updater = new Updater(AutoMessage.getPlugin(), "automessage", AutoMessage.getPlugin().getFile(), UpdateType.NO_DOWNLOAD, false);
-		
-		if(updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			sender.sendMessage(ChatColor.GREEN + "There is an update available! Downloading update...");
-			
-			UpdateResult result = new Updater(AutoMessage.getPlugin(), "automessage", AutoMessage.getPlugin().getFile(), UpdateType.NO_VERSION_CHECK, true).getResult();
-			if(result == UpdateResult.SUCCESS) {
-				sender.sendMessage(ChatColor.RESET + updater.getLatestVersionString() + ChatColor.GREEN + " has been downloaded sucessfully!");
-			} else  {
-				sender.sendMessage(ChatColor.RED + "There was an error downloading " + ChatColor.RESET + updater.getLatestVersionString() + ChatColor.RED + "!");
-			}
-		} else {
-			PluginDescriptionFile desc = AutoMessage.getPlugin().getDescription();
-			
-			sender.sendMessage(ChatColor.RESET + desc.getName() + " v" + desc.getVersion() + ChatColor.GREEN + " is up  to date!");
-		}
-	}
-
-	@BaseCommand(aliases = "add", desc = "Add a list or message to a list.", usage = "<List> [Index] [Message]", min = 1, permission = Permission.COMMAND_ADD)
+	@BaseCommand(aliases = "add", desc = "Добавляет список или сообщение в список.", usage = "<Список> [Порядок] [Сообщение]", min = 1, permission = Permission.COMMAND_ADD)
 	public void onAddCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 1) {
 			if(MessageLists.getExactList(args[0]) == null) {
@@ -60,9 +37,9 @@ public class PluginCommands {
 				
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "List added sucessfully!");				
+				sender.sendMessage(ChatColor.GREEN + "Список успешно создан!");
 			} else {
-				sender.sendMessage(ChatColor.RED + "A list already exists by this name!");
+				sender.sendMessage(ChatColor.RED + "Список уже существует!");
 			}
 		} else {
 			MessageList list = MessageLists.getBestList(args[0]);
@@ -81,17 +58,17 @@ public class PluginCommands {
 
 					AutoMessage.getPlugin().saveConfiguration();
 
-					sender.sendMessage(ChatColor.GREEN + "Message added!");
+					sender.sendMessage(ChatColor.GREEN + "Сообщение добавлено!");
 				} else {
-					sender.sendMessage(ChatColor.RED + "Please specify more arguments!");
+					sender.sendMessage(ChatColor.RED + "Пожалуйста, кажите больше парметров!");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+				sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 			}
 		}
 	}
 
-	@BaseCommand(aliases = "edit", desc = "Edit a message in a list.", usage = "<List> <Index> <Message>", min = 3, permission = Permission.COMMAND_EDIT)
+	@BaseCommand(aliases = "edit", desc = "Изменяет сообщение.", usage = "<Список> <Порядок> <Сообщение>", min = 3, permission = Permission.COMMAND_EDIT)
 	public void onEditCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -102,19 +79,19 @@ public class PluginCommands {
 				if(list.editMessage(Integer.valueOf(args[1]), message)) {
 					AutoMessage.getPlugin().saveConfiguration();
 					
-					sender.sendMessage(ChatColor.GREEN + "Message edited!");
+					sender.sendMessage(ChatColor.GREEN + "Сообщение отредактировано!");
 				} else {
-					sender.sendMessage(ChatColor.RED + "The specified index does not exist!");
+					sender.sendMessage(ChatColor.RED + "Указанный номер не найден!");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "The specified index does not exist!");
+				sender.sendMessage(ChatColor.RED + "Указанный номер не найден!");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "remove", desc = "Remove a list or message from a list.", usage = "<List> [Index]", min = 1, max = 3, permission = Permission.COMMAND_REMOVE)
+	@BaseCommand(aliases = "remove", desc = "Удаляет список или сообщение.", usage = "<Список> [Порядок]", min = 1, max = 3, permission = Permission.COMMAND_REMOVE)
 	public void onRemoveCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 1) {
 			if(MessageLists.getExactList(args[0]) != null) {
@@ -122,9 +99,9 @@ public class PluginCommands {
 				
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "List removed sucessfully!");				
+				sender.sendMessage(ChatColor.GREEN + "Список успешно удален!");
 			} else {
-				sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+				sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 			}
 		} else {
 			MessageList list = MessageLists.getBestList(args[0]);
@@ -135,20 +112,20 @@ public class PluginCommands {
 						MessageLists.schedule();
 						AutoMessage.getPlugin().saveConfiguration();
 						
-						sender.sendMessage(ChatColor.GREEN + "Message removed!");
+						sender.sendMessage(ChatColor.GREEN + "Сообщение удалено!");
 					} else {
-						sender.sendMessage(ChatColor.RED + "The specified index does not exist!");
+						sender.sendMessage(ChatColor.RED + "Указанный номер не найден!");
 					}
 				} else {
-					sender.sendMessage(ChatColor.RED + "The specified index does not exist!");
+					sender.sendMessage(ChatColor.RED + "Указанный номер не найден!");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+				sender.sendMessage(ChatColor.RED + "Указанный номер не найден!");
 			}
 		}
 	}
 
-	@BaseCommand(aliases = "enabled", desc = "Toggle broadcasting for a list.", usage = "<List>", min = 1, max = 1, permission = Permission.COMMAND_ENABLE)
+	@BaseCommand(aliases = "enabled", desc = "Переключет состояние публикации списка.", usage = "<Списка>", min = 1, max = 1, permission = Permission.COMMAND_ENABLE)
 	public void onEnableCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -157,13 +134,13 @@ public class PluginCommands {
 			
 			AutoMessage.getPlugin().saveConfiguration();
 
-			sender.sendMessage(ChatColor.GREEN + "Enabled: " + ChatColor.YELLOW + list.isEnabled() + ChatColor.GREEN + "!");
+			sender.sendMessage(ChatColor.GREEN + "Включено: " + ChatColor.YELLOW + list.isEnabled() + ChatColor.GREEN + "!");
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "interval", desc = "Set a lists broadcast interval.", usage = "<List> <Interval>", min = 2, max = 2, permission = Permission.COMMAND_INTERVAL)
+	@BaseCommand(aliases = "interval", desc = "Указывает время между публикацией сообщений.", usage = "<Список> <Интервал>", min = 2, max = 2, permission = Permission.COMMAND_INTERVAL)
 	public void onIntervalCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -174,16 +151,16 @@ public class PluginCommands {
 				MessageLists.schedule();
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "Interval: " + ChatColor.YELLOW + Integer.valueOf(args[1]) + ChatColor.GREEN + "!");
+				sender.sendMessage(ChatColor.GREEN + "Интвервал: " + ChatColor.YELLOW + Integer.valueOf(args[1]) + ChatColor.GREEN + "!");
 			} else {
-				sender.sendMessage(ChatColor.RED + "The interval must be an Integer!");
+				sender.sendMessage(ChatColor.RED + "Интервал может быть только числовым!");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "expiry", desc = "Set a lists expiry time.", usage = "<List> <Expiry>", min = 2, max = 2, permission = Permission.COMMAND_EXPIRY)
+	@BaseCommand(aliases = "expiry", desc = "Указывает срок истечения списка.", usage = "<Список> <Срок>", min = 2, max = 2, permission = Permission.COMMAND_EXPIRY)
 	public void onExpiryCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -202,19 +179,19 @@ public class PluginCommands {
 				AutoMessage.getPlugin().saveConfiguration();
 				
 				if(list.getExpiry() != -1) {
-					sender.sendMessage(ChatColor.GREEN + "Expires in " + ChatColor.YELLOW + StringUtil.millisToLongDHMS(list.getExpiry() - System.currentTimeMillis()) + ChatColor.GREEN + "!");
+					sender.sendMessage(ChatColor.GREEN + "Истекает через " + ChatColor.YELLOW + StringUtil.millisToLongDHMS(list.getExpiry() - System.currentTimeMillis()) + ChatColor.GREEN + "!");
 				} else {
-					sender.sendMessage(ChatColor.GREEN + "Expiry disabled!");
+					sender.sendMessage(ChatColor.GREEN + "Срок истечения выключен!");
 				}
 			} catch (NumberFormatException e) {
-				sender.sendMessage(ChatColor.RED + "Illegal Format. To disable use -1.");
+				sender.sendMessage(ChatColor.RED + "Неверный вормат. Для выключения используйте -1.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "random", desc = "Set a lists broadcast method.", usage = "<List>", min = 1, max = 1, permission = Permission.COMMAND_RANDOM)
+	@BaseCommand(aliases = "random", desc = "Переключет режим показа сообщений.", usage = "<Список>", min = 1, max = 1, permission = Permission.COMMAND_RANDOM)
 	public void onRandomCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -223,13 +200,13 @@ public class PluginCommands {
 			
 			AutoMessage.getPlugin().saveConfiguration();
 			
-			sender.sendMessage(ChatColor.GREEN + "Random: " + ChatColor.YELLOW + list.isRandom() + ChatColor.GREEN + "!");
+			sender.sendMessage(ChatColor.GREEN + "Случайно: " + ChatColor.YELLOW + list.isRandom() + ChatColor.GREEN + "!");
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "prefix", desc = "Set a lists prefix for broadcasts.", usage = "<List> [Prefix]", min = 1, permission = Permission.COMMAND_PREFIX)
+	@BaseCommand(aliases = "prefix", desc = "Указывает префикс для сообщений.", usage = "<Список> [Префикс]", min = 1, permission = Permission.COMMAND_PREFIX)
 	public void onPrefixCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -239,20 +216,20 @@ public class PluginCommands {
 				
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "Prefix updated!");
+				sender.sendMessage(ChatColor.GREEN + "Префикс обновлен!");
 			} else {
 				list.setPrefix(StringUtil.concat(args, 1, args.length) + " ");
 
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "Prefix updated!");
+				sender.sendMessage(ChatColor.GREEN + "Префикс обновлен!");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "suffix", desc = "Set a lists suffix for broadcasts.", usage = "<List> [Suffix]", min = 1, permission = Permission.COMMAND_SUFFIX)
+	@BaseCommand(aliases = "suffix", desc = "Указывает суффикс для сообщений.", usage = "<Список> [Суффикс]", min = 1, permission = Permission.COMMAND_SUFFIX)
 	public void onSuffixCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -262,20 +239,20 @@ public class PluginCommands {
 
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "Suffix updated!");
+				sender.sendMessage(ChatColor.GREEN + "Суффикс обновлен!");
 			} else {
 				list.setSuffix(" " + StringUtil.concat(args, 1, args.length));
 
 				AutoMessage.getPlugin().saveConfiguration();
 				
-				sender.sendMessage(ChatColor.GREEN + "Suffix updated!");
+				sender.sendMessage(ChatColor.GREEN + "Суффикс обновлен!");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "broadcast", desc = "Broadcast a message from a list.", usage = "<List> <Index>", min = 2, max = 2, permission = Permission.COMMAND_BROADCAST)
+	@BaseCommand(aliases = "broadcast", desc = "Рассылает сообщение.", usage = "<Список> <Порядок>", min = 2, max = 2, permission = Permission.COMMAND_BROADCAST)
 	public void onBroadcast(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		MessageList list = MessageLists.getBestList(args[0]);
 
@@ -286,27 +263,27 @@ public class PluginCommands {
 				if(list.getMessage(index) != null) {
 					list.broadcast(index);
 				} else {
-					sender.sendMessage(ChatColor.RED + "The specified index does not exist!");
+					sender.sendMessage(ChatColor.RED + "Указанный номер не найден в списке!");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "The specified index does not exist!");
+				sender.sendMessage(ChatColor.RED + "Указанный номер не найден в списке!");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+			sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 		}
 	}
 
-	@BaseCommand(aliases = "list", desc = "List all lists or messages in a list.", usage = "[List]", max = 1, permission = Permission.COMMAND_LIST)
+	@BaseCommand(aliases = "list", desc = "Показывает список сообщение в списке.", usage = "[Список]", max = 1, permission = Permission.COMMAND_LIST)
 	public void onListCmd(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(args.length == 0) {
 			if(MessageLists.getMessageLists().keySet().size() != 0) {
-				sender.sendMessage(ChatColor.DARK_RED + "Availiable Lists:");
+				sender.sendMessage(ChatColor.DARK_RED + "Доступные списки:");
 				
 				for(String key : MessageLists.getMessageLists().keySet()) {
 					sender.sendMessage(ChatColor.GOLD + key);
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "No lists availiable!");
+				sender.sendMessage(ChatColor.RED + "Нет доступных списков!");
 			}
 		} else {
 			MessageList list = MessageLists.getBestList(args[0]);
@@ -319,11 +296,11 @@ public class PluginCommands {
 					sender.sendMessage(ChatColor.YELLOW + "" + i + ": " + ChatColor.RESET + ChatColor.translateAlternateColorCodes("&".charAt(0), list.getPrefix() + messages.get(i).getFormat() + list.getSuffix()));
 					
 					for(int j = 0; j < messages.get(i).getArguments().size(); j++) {
-						sender.sendMessage(" Argument #" + j + ":" + messages.get(i).getArguments().get(j));
+						sender.sendMessage(" Параметр #" + j + ":" + messages.get(i).getArguments().get(j));
 					}
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "The specified list does not exist!");
+				sender.sendMessage(ChatColor.RED + "Указанный список не найден!");
 			}
 		}
 	}

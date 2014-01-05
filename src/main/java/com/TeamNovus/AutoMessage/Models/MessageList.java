@@ -15,17 +15,17 @@ public class MessageList {
 	private int interval = 45;
 	private long expiry = -1L;
 	private boolean random = false;
-	private String prefix = "[&bPrefix&r] ";
-	private String suffix = " [&4Suffix&r]";
+	private String prefix = "[&bПрофикс&r] ";
+	private String suffix = " [&4Суффикс&r]";
 	private List<Message> messages = new ArrayList<Message>();
 	
 	private transient int currentIndex = 0;
 	
 	public MessageList() {
-	    messages.add(new Message("First message in the list!"));
-	    messages.add(new Message("&aSecond message in the list with formatters!"));
-	    messages.add(new Message("&bThird message in the list with formatters and a \nnew line!"));
-	    messages.add(new Message("&cFourth message in the list with %8s formatters and a \nnew line!", "advanced"));
+	    messages.add(new Message("Певое сообщение в списке!"));
+	    messages.add(new Message("&aВторое сообщение в спсике с форматированием!"));
+	    messages.add(new Message("&bТретье сообщение в списке с форматированиеи и \nновой строкой!"));
+	    messages.add(new Message("&cЧетвертое сообщение в списке с %8 форматированием и \nновой строкой!", "advanced"));
 	}
 	
 	public boolean isEnabled() {
